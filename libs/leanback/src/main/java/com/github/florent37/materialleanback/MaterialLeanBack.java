@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.florent37.materialleanback.line.LineAdapter;
-import com.github.florent37.materialleanback.line.LineViewHolder;
 import com.nineoldandroids.view.ViewHelper;
 
 /**

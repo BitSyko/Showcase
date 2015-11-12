@@ -1,22 +1,19 @@
 package com.github.florent37.materialleanback.line;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.florent37.materialleanback.cell.CellAdapter;
-import com.github.florent37.materialleanback.cell.CellViewHolder;
 import com.github.florent37.materialleanback.MaterialLeanBack;
 import com.github.florent37.materialleanback.MaterialLeanBackSettings;
 import com.github.florent37.materialleanback.R;
+import com.github.florent37.materialleanback.cell.CellAdapter;
+import com.github.florent37.materialleanback.cell.CellViewHolder;
 
 
 /**

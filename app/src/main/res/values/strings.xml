@@ -1,36 +1,27 @@
 <resources>
     <string name="app_name">Layers Showcase</string>
 
-    <string name="action_settings">Settings</string>
+
 
     <string name="free">Free Layers</string>
     <string name="paid">Paid Layers</string>
     <string name="donate">Donate Layers</string>
     <string name="details">Details</string>
-    <string name="showcasetitle">Showcase</string>
     <string name="General">General</string>
     <string name="developer_settings">Developer settings</string>
-    <string name="screensize">Compatible screen Sizes</string>
 
     <string name="description">Description</string>
-    <string name="error">Error</string>
-    <string name="developer">Author</string>
-    <string name="testdeveloper">TestDeveloper</string>
     <string name="info">More Info</string>
     <string name="gettheme">Get Layer</string>
     <string name="installtheme">Install Layer</string>
-    <string name="donatev">Donate</string>
     <string name="version">Version</string>
     <string name="author">Author</string>
     <string name="layerstheme">Layer</string>
     <string name="action_search">Search</string>
 
     <!-- MAIN SCREEN CARD TEXT -->
-    <string name="layersthemestitle">Layers</string>
     <string name="freecard1header">Free Layers</string>
-    <string name="freecard1">Click to list all free layers</string>
     <string name="paidcard2header">Paid Layers</string>
-    <string name="donatecard2">Click to list all paid layers</string>
 
     <!-- DETAILS MESSAGES -->
     <string name="supportsL">This Layer supports your Android version (Android Lollipop)</string>
@@ -42,14 +33,10 @@
     <string name="nodensitysupport">This Layer does not support your device\u0027s display density.
 This may cause blurry looking drawables or drawables which are not themed.</string>
 
-    <string name="density">Display density</string>
-    <string name="densityAlert">Icon indicates if this layer supports your devices display density
-        \nGreen = supported\nRed = not supported</string>
 
     <!-- About -->
     <string name="developedby">Layers developed by</string>
     <string name="usefullinks">Useful links</string>
-    <string name="AditionalLayersDev">Additional Layers commits</string>
     <string name="findOutWhatsNew">Find out whats new</string>
     <string name="joinTheChat">Join the chat</string>
     <string name="AppDeveloper">App Developer</string>
@@ -101,9 +88,7 @@ This may cause blurry looking drawables or drawables which are not themed.</stri
 
     <!-- NavDrawer -->
     <string name="More">More</string>
-    <string name="Tutorial">Tutorial</string>
     <string name="About">About</string>
-    <string name="Showcase">Layers Showcase</string>
     <string name="discover">Discover</string>
     <string name="PlayStore">PlayStore</string>
     <string name="Settings">Settings</string>
@@ -154,4 +139,18 @@ This may cause blurry looking drawables or drawables which are not themed.</stri
 
     <string name="noPermission">No Permission</string>
     <string name="noPermissionDescription">No permission to view your phone´s internal storage granted.\nYou won´t be able to use this feature until you grant this permission.</string>
+    <string name="RefreshLayers">Refresh Showcase Layers</string>
+    <string name="AndroidVersion">Android Version</string>
+    <string name="LayersShowcaseName">Layers Showcase</string>
+    <string name="WelcomeText">Welcome to Layers Showcase</string>
+    <string name="AndroidPlatform">Android Platform</string>
+    <string name="WelcomeTextSub">Discover all the beautiful Layers.</string>
+    <string name="DisplayDensity">Display Density</string>
+    <string name="LayersVersion">Layers Version</string>
+    <string name="RemoveLauncherIcon">Remove Launcher Icon</string>
+    <string name="RemoveLauncherIconWarning">Be sure your ROM includes the Layers Manager in the Settings app</string>
+    <string name="Bootanimation">Bootanimation</string>
+    <string name="DonateVersion">Donate version available</string>
+    <string name="DisplayDensity2">Display Density</string>
+    <string name="AndroidVersion2">Android Version</string>
 </resources>

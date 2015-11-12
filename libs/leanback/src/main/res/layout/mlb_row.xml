@@ -12,7 +12,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:text="More"
+        android:text="@string/More"
         android:id="@+id/row_button"
         android:layout_alignParentStart="false"
         android:layout_alignParentEnd="true"

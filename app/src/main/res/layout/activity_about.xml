@@ -20,7 +20,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Layers Showcase"
+        android:text="@string/LayersShowcaseName"
         android:id="@+id/tv_AppName"
         android:textColor="@color/actionbar_text_color"
         android:layout_below="@+id/imVie_AppLogo"

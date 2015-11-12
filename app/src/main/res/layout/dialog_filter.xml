@@ -7,7 +7,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="48.0dip"
-        android:text="Android Version"
+        android:text="@string/AndroidVersion"
         android:id="@+id/textView8"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
@@ -31,7 +31,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="48.0dip"
-        android:text="Android Platform"
+        android:text="@string/AndroidPlatform"
         android:id="@+id/textView9"
         android:layout_below="@+id/textView8"
         android:layout_alignStart="@+id/textView8"
@@ -56,7 +56,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="48.0dip"
-        android:text="Display Density"
+        android:text="@string/DisplayDensity"
         android:id="@+id/textView11"
         android:layout_below="@+id/textView9"
         android:layout_alignStart="@+id/textView8"
@@ -81,7 +81,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="48.0dip"
-        android:text="Layers Version"
+        android:text="@string/LayersVersion"
         android:id="@+id/textView10"
         android:layout_below="@+id/textView11"
         android:layout_alignStart="@+id/textView8"
@@ -142,7 +142,7 @@
         android:layout_width="fill_parent"
         android:layout_height="48.0dip"
         android:layout_marginRight="8.0dip"
-        android:text="Bootanimation"
+        android:text="@string/Bootanimation"
         android:layout_toLeftOf="@+id/bootanimationCheckbox"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="false"

@@ -5,5 +5,5 @@
         android:title="Submit a Layer" />-->
     <item
         android:id="@+id/action_refresh"
-        android:title="Refresh Showcase Layers" />
+        android:title="@string/RefreshLayers" />
 </menu>

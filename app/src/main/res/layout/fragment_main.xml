@@ -20,7 +20,7 @@
             android:textColor="@color/text_color_inverse"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Welcome to Layers Showcase"
+            android:text="@string/WelcomeText"
             android:id="@+id/headerHeader"
             android:layout_gravity="start"
             android:textStyle="bold"
@@ -34,7 +34,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Discover all the beautiful Layers."
+            android:text="@string/WelcomeTextSub"
             android:id="@+id/headerText"
             android:layout_gravity="start|top"
             android:layout_marginStart="16dp"
