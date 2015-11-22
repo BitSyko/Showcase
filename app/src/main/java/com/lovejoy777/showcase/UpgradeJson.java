@@ -25,7 +25,10 @@ public class UpgradeJson extends AsyncTask<Void, String, Void> {
     private boolean force;
     private Callback callback;
     private ProgressDialog progressShowcase;
-    private final String jsonData = "https://api.github.com/repos/BitSyko/layers_showcase_json/releases/latest";
+    //private final String jsonData = "https://api.github.com/repos/BitSyko/layers_showcase_json/releases/latest";
+    private final String jsonFile = "http://showcaseapi.x10.mx/v1/layers";
+    private final String jsonVersion = "http://showcaseapi.x10.mx/v1/getversion";
+
 
     public UpgradeJson(Context context, boolean force, Callback callback) {
         this.context = context;
@@ -54,7 +57,7 @@ public class UpgradeJson extends AsyncTask<Void, String, Void> {
     protected Void doInBackground(Void... params) {
 
 
-        String jsonInfo = downloadFile(jsonData);
+        String jsonInfo = downloadFile(jsonVersion);
         JsonNode actualObj;
 
         if (jsonInfo == null) {
@@ -70,18 +73,18 @@ public class UpgradeJson extends AsyncTask<Void, String, Void> {
             return null;
         }
 
-        String tag = actualObj.get("tag_name").asText();
+        String version = actualObj.get("version_id").asText();
 
-        //Compare tag with one in preferences
-        if (!force && context.getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("tag", "0").equals(tag)) {
+        //Compare version with one in preferences
+        if (!force && context.getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("version_id", "0").equals(version)) {
             return null;
         }
 
 
-        String layersJsonUrl = "https://github.com/BitSyko/layers_showcase_json/releases/download/" + tag + "/showcase.json";
+        //String layersJsonUrl = "https://github.com/BitSyko/layers_showcase_json/releases/download/" + tag + "/showcase.json";
 
 
-        String layersJson = downloadFile(layersJsonUrl);
+        String layersJson = downloadFile(jsonFile);
 
         if (layersJson == null) {
             publishProgress("Download failed");
@@ -98,7 +101,7 @@ public class UpgradeJson extends AsyncTask<Void, String, Void> {
         }
 
         //We update settings only after successful download
-        context.getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("tag", tag).apply();
+        context.getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("version_id", version).apply();
 
         try {
             Files.write(layersJson, getLayersJsonFile(context), Charsets.UTF_8);
