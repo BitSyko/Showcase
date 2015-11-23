@@ -66,10 +66,10 @@ public class SubmitActivity extends AppCompatActivity {
         viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
 
         if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("1")) {
-            toolbar.setTitle("Register");
+            toolbar.setTitle(R.string.Register);
             viewFlipper.setDisplayedChild(0);
         } else if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("2")) {
-            toolbar.setTitle("Login");
+            toolbar.setTitle(R.string.Login);
             viewFlipper.setDisplayedChild(1);
         } else if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("3")) {
             viewFlipper.setDisplayedChild(2);
@@ -79,7 +79,7 @@ public class SubmitActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         generate = (Button) findViewById(R.id.generate);
         prgDialog = new ProgressDialog(this);
-        prgDialog.setMessage("Please wait...");
+        prgDialog.setMessage(getString(R.string.PleaseWait));
         prgDialog.setCancelable(false);
     }
 
@@ -96,7 +96,7 @@ public class SubmitActivity extends AppCompatActivity {
                     JSONObject obj = new JSONObject(response);
                     if (obj.getBoolean("error") == false) {
                         if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("1")) {
-                            toolbar.setTitle("Login");
+                            toolbar.setTitle(R.string.login);
                             viewFlipper.setInAnimation(SubmitActivity.this, R.anim.anni1);
                             viewFlipper.setOutAnimation(SubmitActivity.this, R.anim.anni2);
                             viewFlipper.showNext();
@@ -104,7 +104,7 @@ public class SubmitActivity extends AppCompatActivity {
                             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/login").apply();
                         } else if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("2")) {
                             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiKey", obj.getString("apiKey")).apply();
-                            toolbar.setTitle("Submit A Layer");
+                            toolbar.setTitle(R.string.Submit);
                             viewFlipper.setInAnimation(SubmitActivity.this, R.anim.anni1);
                             viewFlipper.setOutAnimation(SubmitActivity.this, R.anim.anni2);
                             viewFlipper.showNext();
@@ -112,7 +112,7 @@ public class SubmitActivity extends AppCompatActivity {
                             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/layers").apply();
                         } else if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("3")) {
                             View coordinatorLayoutView = findViewById(R.id.snackbar);
-                            Snackbar snack = Snackbar.make(coordinatorLayoutView, "Layer has successfully been submitted for review", Snackbar.LENGTH_LONG);
+                            Snackbar snack = Snackbar.make(coordinatorLayoutView, R.string.SucessfullySubmited, Snackbar.LENGTH_LONG);
                             View view = snack.getView();
                             TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
                             tv.setTextColor(Color.WHITE);
@@ -123,7 +123,7 @@ public class SubmitActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
-                    Toast.makeText(getApplicationContext(), "Error Occurred. Response might be invalid!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.ErrorInvalidResponsePossible, Toast.LENGTH_LONG).show();
                     e.printStackTrace();
 
                 }
@@ -133,11 +133,11 @@ public class SubmitActivity extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 prgDialog.hide();
                 if (statusCode == 404) {
-                    Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.RessourceNotFound, Toast.LENGTH_LONG).show();
                 } else if (statusCode == 500) {
-                    Toast.makeText(getApplicationContext(), "Something is wrong on server ends", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.ServerProblem, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Unexpected Error occcured!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), R.string.UnexpectedError, Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -170,15 +170,15 @@ public class SubmitActivity extends AppCompatActivity {
         RequestParams params = new RequestParams();
         if (Helpers.isNotNull(name) && Helpers.isNotNull(email) && Helpers.isNotNull(password)) {
             if (Helpers.validate(email)) {
-                params.put("name", name);
-                params.put("email", email);
-                params.put("password", password);
+                params.put(getString(R.string.Name), name);
+                params.put(getString(R.string.Email), email);
+                params.put(getString(R.string.Password), password);
                 invokeWS(params);
             } else {
-                Toast.makeText(getApplicationContext(), "Please enter valid email", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.EnterValidEmail, Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(getApplicationContext(), "Don't leave any field blank", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.NoBlankFieldsPlease, Toast.LENGTH_LONG).show();
         }
 
     }
@@ -195,10 +195,10 @@ public class SubmitActivity extends AppCompatActivity {
                 params.put("password", password);
                 invokeWS(params);
             } else {
-                Toast.makeText(getApplicationContext(), "Please enter valid email", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.EnterValidEmail, Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(getApplicationContext(), "Don't leave any field blank", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.NoBlankFieldsPlease, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -229,7 +229,7 @@ public class SubmitActivity extends AppCompatActivity {
         if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("1")) {
             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("view", "2").apply();
             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/login").apply();
-            toolbar.setTitle("Login");
+            toolbar.setTitle(R.string.Login);
         }
     }
 
@@ -240,7 +240,7 @@ public class SubmitActivity extends AppCompatActivity {
         if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("2")) {
             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("view", "1").apply();
             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/register").apply();
-            toolbar.setTitle("Register");
+            toolbar.setTitle(R.string.Register);
         }
     }
 }

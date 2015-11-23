@@ -1,11 +1,8 @@
 <resources>
     <string name="app_name">Layers Showcase</string>
 
-
-
-    <string name="free">Free Layers</string>
-    <string name="paid">Paid Layers</string>
     <string name="donate">Donate Layers</string>
+
     <string name="details">Details</string>
     <string name="General">General</string>
     <string name="developer_settings">Developer settings</string>
@@ -94,6 +91,8 @@ This may cause blurry looking drawables or drawables which are not themed.</stri
     <string name="Settings">Settings</string>
     <string name="Manager">Layers Manager</string>
     <string name="Submit">Submit a Layer</string>
+    <string name="free">Free Layers</string>
+    <string name="paid">Paid Layers</string>
 
     <!-- Json Form EditText -->
     <string name="title">Title</string>
@@ -153,4 +152,20 @@ This may cause blurry looking drawables or drawables which are not themed.</stri
     <string name="DonateVersion">Donate version available</string>
     <string name="DisplayDensity2">Display Density</string>
     <string name="AndroidVersion2">Android Version</string>
+
+    <!-- Submit Layer -  Signup / Login / Errors -->
+    <string name="Register">Register</string>
+    <string name="Login">Login</string>
+    <string name="PleaseWait">Please wait...</string>
+    <string name="login">Login</string>
+    <string name="SucessfullySubmited">Layer has successfully been submitted for review</string>
+    <string name="ErrorInvalidResponsePossible">Error Occurred. Response might be invalid!</string>
+    <string name="RessourceNotFound">Requested resource not found</string>
+    <string name="ServerProblem">Something is wrong on server ends</string>
+    <string name="UnexpectedError">Unexpected Error occurred!</string>
+    <string name="Name">name</string>
+    <string name="Email">email</string>
+    <string name="Password">password</string>
+    <string name="EnterValidEmail">Please enter valid email</string>
+    <string name="NoBlankFieldsPlease">Don\'t leave any field blank</string>
 </resources>
