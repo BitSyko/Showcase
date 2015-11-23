@@ -1,17 +1,12 @@
 package com.lovejoy777.showcase.activities;
 
-import android.Manifest;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.JsonWriter;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,18 +14,25 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.app.AlertDialog;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.lovejoy777.showcase.Helpers;
 import com.lovejoy777.showcase.R;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import cz.msebera.android.httpclient.Header;
+
+//TODO
+//Add image uploading to database
 public class SubmitActivity extends AppCompatActivity {
     public final int[] EditText = {R.id.title, R.id.description, R.id.author, R.id.link,
             R.id.backup_link, R.id.icon, R.id.promo, R.id.screenshot_1, R.id.screenshot_2, R.id.screenshot_3,
@@ -50,91 +52,95 @@ public class SubmitActivity extends AppCompatActivity {
     ArrayList<String> values = new ArrayList<String>(Arrays.asList(strings));
     ArrayList<String> values2 = new ArrayList<String>();
 
+    ProgressDialog prgDialog;
+    EditText nameText, emailText, passwordText;
+    ViewFlipper viewFlipper;
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_submit);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
+        viewFlipper = (ViewFlipper) findViewById(R.id.viewflipper);
+
+        if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("1")) {
+            toolbar.setTitle("Register");
+            viewFlipper.setDisplayedChild(0);
+        } else if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("2")) {
+            toolbar.setTitle("Login");
+            viewFlipper.setDisplayedChild(1);
+        } else if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("3")) {
+            viewFlipper.setDisplayedChild(2);
+        }
+
         setSupportActionBar(toolbar);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         generate = (Button) findViewById(R.id.generate);
-        Bundle extras = getIntent().getExtras();
-        if (Build.VERSION.SDK_INT >= 23) {
-            int hasWriteStorage = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            if (hasWriteStorage != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            }
-        }
+        prgDialog = new ProgressDialog(this);
+        prgDialog.setMessage("Please wait...");
+        prgDialog.setCancelable(false);
     }
 
-    public void send(View v) {
-        values2.clear();
-        for (int id : EditText) {
-            EditText t = (EditText) findViewById(id);
-            values2.add((t.getText().toString().trim().length() > 0) ? t.getText().toString() : "false");
-        }
-        for (int id2 : CheckBox) {
-            CheckBox c = (CheckBox) findViewById(id2);
-            values2.add(String.valueOf(c.isChecked()));
-        }
-        String title = values2.get(0);
-        title = title.replaceAll(" ", "_");
-        String title2 = title;
-        values2.set(0, title2);
-        File file = new File(Environment.getExternalStorageDirectory(), title2 + ".json");
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            writeJson(out);
-            View coordinatorLayoutView = findViewById(R.id.snackbar);
-            Snackbar snack = Snackbar.make(coordinatorLayoutView, "Created /sdcard/" + title2 + ".json", Snackbar.LENGTH_LONG);
-            View view = snack.getView();
-            TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
-            tv.setTextColor(Color.WHITE);
-            view.setBackgroundColor(Color.parseColor("#F44336"));
-            snack.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void writeJson(OutputStream out) throws IOException {
-        JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
-        writer.setIndent("    ");
-        jsonFinal(writer);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d("Permissions", "Permission Granted: " + permissions[0]);
-                } else {
-                    AlertDialog.Builder noPermissionDialog = new AlertDialog.Builder(this);
-                    noPermissionDialog.setTitle(R.string.noPermission);
-                    noPermissionDialog.setMessage(R.string.noPermissionDescription);
-                    noPermissionDialog.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            onBackPressed();
+    public void invokeWS(RequestParams params) {
+        prgDialog.show();
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("Authorization", getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("apiKey", "null"));
+        client.post(getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("apiURL", "http://showcaseapi.x10.mx/v1/register"), params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                prgDialog.hide();
+                try {
+                    String response = new String(responseBody);
+                    JSONObject obj = new JSONObject(response);
+                    if (obj.getBoolean("error") == false) {
+                        if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("1")) {
+                            toolbar.setTitle("Login");
+                            viewFlipper.setInAnimation(SubmitActivity.this, R.anim.anni1);
+                            viewFlipper.setOutAnimation(SubmitActivity.this, R.anim.anni2);
+                            viewFlipper.showNext();
+                            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("view", "2").apply();
+                            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/login").apply();
+                        } else if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("2")) {
+                            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiKey", obj.getString("apiKey")).apply();
+                            toolbar.setTitle("Submit A Layer");
+                            viewFlipper.setInAnimation(SubmitActivity.this, R.anim.anni1);
+                            viewFlipper.setOutAnimation(SubmitActivity.this, R.anim.anni2);
+                            viewFlipper.showNext();
+                            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("view", "3").apply();
+                            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/layers").apply();
+                        } else if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("3")) {
+                            View coordinatorLayoutView = findViewById(R.id.snackbar);
+                            Snackbar snack = Snackbar.make(coordinatorLayoutView, "Layer has successfully been submitted for review", Snackbar.LENGTH_LONG);
+                            View view = snack.getView();
+                            TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+                            tv.setTextColor(Color.WHITE);
+                            view.setBackgroundColor(Color.parseColor("#F44336"));
+                            snack.show();
                         }
-                    });
-                    noPermissionDialog.show();
-                }
-                return;
-            }
-        }
-    }
+                    } else {
+                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(getApplicationContext(), "Error Occurred. Response might be invalid!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
 
-    public void jsonFinal(JsonWriter writer) throws IOException {
-        writer.beginObject();
-        for (int i = 0; i < values.size(); i++) {
-            String json1 = values.get(i);
-            String json2 = values2.get(i);
-            writer.name(json1).value(json2);
-        }
-        writer.endObject();
-        writer.close();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                prgDialog.hide();
+                if (statusCode == 404) {
+                    Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                } else if (statusCode == 500) {
+                    Toast.makeText(getApplicationContext(), "Something is wrong on server ends", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Unexpected Error occcured!", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -152,5 +158,89 @@ public class SubmitActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.back2, R.anim.back1);
+    }
+
+    public void registerUser(View view) {
+        nameText = (EditText) findViewById(R.id.input_name);
+        emailText = (EditText) findViewById(R.id.input_email);
+        passwordText = (EditText) findViewById(R.id.input_password);
+        String name = nameText.getText().toString();
+        String email = emailText.getText().toString();
+        String password = passwordText.getText().toString();
+        RequestParams params = new RequestParams();
+        if (Helpers.isNotNull(name) && Helpers.isNotNull(email) && Helpers.isNotNull(password)) {
+            if (Helpers.validate(email)) {
+                params.put("name", name);
+                params.put("email", email);
+                params.put("password", password);
+                invokeWS(params);
+            } else {
+                Toast.makeText(getApplicationContext(), "Please enter valid email", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "Don't leave any field blank", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    public void loginUser(View view) {
+        emailText = (EditText) findViewById(R.id.input_email2);
+        passwordText = (EditText) findViewById(R.id.input_password2);
+        String email = emailText.getText().toString();
+        String password = passwordText.getText().toString();
+        RequestParams params = new RequestParams();
+        if (Helpers.isNotNull(email) && Helpers.isNotNull(password)) {
+            if (Helpers.validate(email)) {
+                params.put("email", email);
+                params.put("password", password);
+                invokeWS(params);
+            } else {
+                Toast.makeText(getApplicationContext(), "Please enter valid email", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), "Don't leave any field blank", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void submitLayer(View view) {
+        values2.clear();
+        for (int id : EditText) {
+            EditText t = (EditText) findViewById(id);
+            values2.add((t.getText().toString().trim().length() > 0) ? t.getText().toString() : "false");
+        }
+        for (int id2 : CheckBox) {
+            CheckBox c = (CheckBox) findViewById(id2);
+            values2.add(String.valueOf(c.isChecked()));
+        }
+        RequestParams params = new RequestParams();
+        for (int i = 0; i < values.size(); i++) {
+            String json1 = values.get(i);
+            String json2 = values2.get(i);
+            //writer.name(json1).value(json2);
+            params.put(json1, json2);
+        }
+        invokeWS(params);
+    }
+
+    public void nextView(View view) {
+        viewFlipper.setInAnimation(SubmitActivity.this, R.anim.anni1);
+        viewFlipper.setOutAnimation(SubmitActivity.this, R.anim.anni2);
+        viewFlipper.showNext();
+        if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("1")) {
+            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("view", "2").apply();
+            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/login").apply();
+            toolbar.setTitle("Login");
+        }
+    }
+
+    public void prevView(View view) {
+        viewFlipper.setInAnimation(SubmitActivity.this, R.anim.back1);
+        viewFlipper.setOutAnimation(SubmitActivity.this, R.anim.back2);
+        viewFlipper.showPrevious();
+        if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("2")) {
+            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("view", "1").apply();
+            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/register").apply();
+            toolbar.setTitle("Register");
+        }
     }
 }
