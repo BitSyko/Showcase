@@ -1,8 +1,11 @@
 package com.lovejoy777.showcase.activities;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,35 +24,37 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.lovejoy777.showcase.Helpers;
 import com.lovejoy777.showcase.R;
+import com.nononsenseapps.filepicker.FilePickerActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import cz.msebera.android.httpclient.Header;
 
-//TODO
-//Add image uploading to database
 public class SubmitActivity extends AppCompatActivity {
     public final int[] EditText = {R.id.title, R.id.description, R.id.author, R.id.link,
-            R.id.backup_link, R.id.icon, R.id.promo, R.id.screenshot_1, R.id.screenshot_2, R.id.screenshot_3,
-            R.id.googleplus, R.id.version, R.id.donate_link, R.id.donate_version, R.id.wallpaper, R.id.plugin_version,
+            R.id.backup_link,
+            R.id.googleplus, R.id.version, R.id.donate_link, R.id.donate_version, R.id.plugin_version,
             R.id.toolbar_background_color};
     public final int[] CheckBox = {R.id.for_L, R.id.for_M, R.id.basic, R.id.basic_m,
             R.id.type2, R.id.type3, R.id.type3_m, R.id.touchwiz, R.id.lg, R.id.sense,
             R.id.xperia, R.id.zenui, R.id.hdpi, R.id.mdpi, R.id.xhdpi, R.id.xxhdpi, R.id.xxxhdpi, R.id.free,
             R.id.donate, R.id.paid, R.id.needs_update, R.id.will_update, R.id.bootani, R.id.font, R.id.iconpack};
-    Button generate;
-    String[] strings = new String[]{"title", "description", "author", "link", "backup_link", "icon",
-            "promo", "screenshot_1", "screenshot_2", "screenshot_3", "googleplus", "version", "donate_link",
-            "donate_version", "wallpaper", "plugin_version", "toolbar_background_color", "for_L", "for_M",
+
+    String[] strings = new String[]{"title", "description", "author", "link", "backup_link", "googleplus", "version", "donate_link",
+            "donate_version", "plugin_version", "toolbar_background_color", "for_L", "for_M",
             "basic", "basic_m", "type2", "type3", "type3_m", "touchwiz", "lg", "sense", "xperia", "zenui",
             "hdpi", "mdpi", "xhdpi", "xxhdpi", "xxxhdpi", "free", "donate", "paid", "needs_update", "will_update",
             "bootani", "font", "iconpack"};
     ArrayList<String> values = new ArrayList<String>(Arrays.asList(strings));
     ArrayList<String> values2 = new ArrayList<String>();
+    ArrayList<String> valuesImages = new ArrayList<String>();
+    ArrayList<String> imageStrings = new ArrayList<String>();
 
     ProgressDialog prgDialog;
     EditText nameText, emailText, passwordText;
@@ -77,7 +81,7 @@ public class SubmitActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        generate = (Button) findViewById(R.id.generate);
+
         prgDialog = new ProgressDialog(this);
         prgDialog.setMessage(getString(R.string.PleaseWait));
         prgDialog.setCancelable(false);
@@ -212,12 +216,20 @@ public class SubmitActivity extends AppCompatActivity {
             CheckBox c = (CheckBox) findViewById(id2);
             values2.add(String.valueOf(c.isChecked()));
         }
+
         RequestParams params = new RequestParams();
         for (int i = 0; i < values.size(); i++) {
             String json1 = values.get(i);
             String json2 = values2.get(i);
-            //writer.name(json1).value(json2);
             params.put(json1, json2);
+        }
+        for (int i = 0; i < valuesImages.size(); i++) {
+            String json3 = valuesImages.get(i);
+            String json4 = imageStrings.get(i);
+            File myFile = new File(json3);
+            try {
+                params.put(json4, myFile);
+            } catch(FileNotFoundException e) {}
         }
         invokeWS(params);
     }
@@ -241,6 +253,53 @@ public class SubmitActivity extends AppCompatActivity {
             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("view", "1").apply();
             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/register").apply();
             toolbar.setTitle(R.string.Register);
+        }
+    }
+
+    public void imagePick(View view) {
+        Intent i = new Intent(this, FilePickerActivity.class);
+        switch (view.getId()) {
+            case R.id.icon:
+                startActivityForResult(i, 1);
+                break;
+            case R.id.promo:
+                startActivityForResult(i, 2);
+                break;
+            case R.id.screenshot_1:
+                startActivityForResult(i, 3);
+                break;
+            case R.id.screenshot_2:
+                startActivityForResult(i, 4);
+                break;
+            case R.id.screenshot_3:
+                startActivityForResult(i, 5);
+                break;
+            case R.id.wallpaper:
+                startActivityForResult(i, 6);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            File myFile = new File(uri.getPath());
+            String path = myFile.getAbsolutePath();
+            valuesImages.add(path);
+            if (requestCode == 1) {
+                imageStrings.add("icon");
+            } else if (requestCode == 2) {
+                imageStrings.add("promo");
+            } else if (requestCode == 3) {
+                imageStrings.add("screenshot_1");
+            } else if (requestCode == 4) {
+                imageStrings.add("screenshot_2");
+            } else if (requestCode == 5) {
+                imageStrings.add("screenshot_3");
+            } else if (requestCode == 6) {
+                imageStrings.add("wallpaper");
+            }
         }
     }
 }
