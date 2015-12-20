@@ -275,14 +275,14 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:onClick="imagePick"
-                    android:text="@string/screenshot_1" />
+                    android:text="@string/screenshot_2" />
 
                 <Button
                     android:id="@+id/screenshot_3"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:onClick="imagePick"
-                    android:text="@string/screenshot_1" />
+                    android:text="@string/screenshot_3" />
 
 
                 <android.support.design.widget.TextInputLayout
