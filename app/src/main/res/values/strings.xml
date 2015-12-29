@@ -94,7 +94,7 @@ This may cause blurry looking drawables or drawables which are not themed.</stri
     <string name="free">Free Layers</string>
     <string name="paid">Paid Layers</string>
 
-    <!-- Json Form EditText -->
+    <!-- Json Form -->
     <string name="title">Title</string>
     <string name="downloadlink">Download Link</string>
     <string name="backupdownloadlink">Backup Download Link</string>
@@ -110,7 +110,6 @@ This may cause blurry looking drawables or drawables which are not themed.</stri
     <string name="donateversion">Version Number For Donate Theme If You Have</string>
     <string name="wallpaper">Wallpaper</string>
     <string name="color">Showcase Toolbar Color Hex ie: 212121</string>
-    <!-- Json Form CheckBox -->
     <string name="lollipopsupport">Lollipop Support</string>
     <string name="msupport">M Support</string>
     <string name="basicrrolollipop">Basic RRO Lollipop</string>
@@ -133,7 +132,7 @@ This may cause blurry looking drawables or drawables which are not themed.</stri
     <string name="bootanimation">Boot Animation</string>
     <string name="font">Font</string>
     <string name="iconpack">Icon Pack</string>
-    <!-- Json Form Button -->
+    <string name="apk">Extract Apk Content</string>
     <string name="send">Generate Json</string>
 
     <string name="noPermission">No Permission</string>

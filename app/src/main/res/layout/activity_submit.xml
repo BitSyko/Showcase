@@ -183,6 +183,13 @@
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin">
 
+                <Button
+                    android:id="@+id/apk"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="filePick"
+                    android:text="@string/apk" />
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -253,35 +260,35 @@
                     android:id="@+id/icon"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="imagePick"
+                    android:onClick="filePick"
                     android:text="@string/icon" />
 
                 <Button
                     android:id="@+id/promo"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="imagePick"
+                    android:onClick="filePick"
                     android:text="@string/promo" />
 
                 <Button
                     android:id="@+id/screenshot_1"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="imagePick"
+                    android:onClick="filePick"
                     android:text="@string/screenshot_1" />
 
                 <Button
                     android:id="@+id/screenshot_2"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="imagePick"
+                    android:onClick="filePick"
                     android:text="@string/screenshot_2" />
 
                 <Button
                     android:id="@+id/screenshot_3"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="imagePick"
+                    android:onClick="filePick"
                     android:text="@string/screenshot_3" />
 
 
@@ -333,7 +340,7 @@
                     android:id="@+id/wallpaper"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="imagePick"
+                    android:onClick="filePick"
                     android:text="@string/wallpaper" />
 
                 <android.support.design.widget.TextInputLayout

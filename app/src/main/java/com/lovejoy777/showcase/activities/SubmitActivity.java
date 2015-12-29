@@ -29,10 +29,17 @@ import com.nononsenseapps.filepicker.FilePickerActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -229,7 +236,8 @@ public class SubmitActivity extends AppCompatActivity {
             File myFile = new File(json3);
             try {
                 params.put(json4, myFile);
-            } catch(FileNotFoundException e) {}
+            } catch (FileNotFoundException e) {
+            }
         }
         invokeWS(params);
     }
@@ -256,7 +264,7 @@ public class SubmitActivity extends AppCompatActivity {
         }
     }
 
-    public void imagePick(View view) {
+    public void filePick(View view) {
         Intent i = new Intent(this, FilePickerActivity.class);
         switch (view.getId()) {
             case R.id.icon:
@@ -277,7 +285,47 @@ public class SubmitActivity extends AppCompatActivity {
             case R.id.wallpaper:
                 startActivityForResult(i, 6);
                 break;
+            case R.id.apk:
+                startActivityForResult(i, 7);
+                break;
         }
+    }
+
+    public boolean unzip(String mArchivePath, String mOutPutStream) {
+        InputStream inputstream;
+        ZipInputStream zipinputstream;
+        try {
+            String filename;
+            inputstream = new FileInputStream(mArchivePath);
+            zipinputstream = new ZipInputStream(new BufferedInputStream(inputstream));
+            ZipEntry mZipEntry;
+            byte[] buffer = new byte[1024];
+            int count;
+
+            while ((mZipEntry = zipinputstream.getNextEntry()) != null) {
+                filename = mZipEntry.getName();
+
+                if (mZipEntry.isDirectory()) {
+                    File fmd = new File(mOutPutStream + filename);
+                    fmd.mkdirs();
+                    continue;
+                }
+
+                FileOutputStream fileoutputstream = new FileOutputStream(mOutPutStream + filename);
+
+                while ((count = zipinputstream.read(buffer)) != -1) {
+                    fileoutputstream.write(buffer, 0, count);
+                }
+                fileoutputstream.close();
+                zipinputstream.closeEntry();
+            }
+            Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
+            zipinputstream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -299,6 +347,8 @@ public class SubmitActivity extends AppCompatActivity {
                 imageStrings.add("screenshot_3");
             } else if (requestCode == 6) {
                 imageStrings.add("wallpaper");
+            } else if (requestCode == 7) {
+                unzip(path, "/sdcard/Showcase/");
             }
         }
     }
