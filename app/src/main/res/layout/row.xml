@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <ImageView android:id="@+id/icon"
+        android:drawable="@drawable/ic_launcher"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="2px"
+        android:paddingTop="3px"
+        android:paddingBottom="3px"
+        android:paddingRight="3px"
+        />
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/icon"
+        android:textSize="18sp"
+        android:text="Test App will here bla bla"
+        android:paddingTop="2px"
+        android:paddingBottom="2px"
+        />
+
+</RelativeLayout>

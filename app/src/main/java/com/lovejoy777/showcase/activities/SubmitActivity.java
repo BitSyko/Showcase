@@ -4,15 +4,23 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -29,17 +37,12 @@ import com.nononsenseapps.filepicker.FilePickerActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -65,6 +68,7 @@ public class SubmitActivity extends AppCompatActivity {
 
     ProgressDialog prgDialog;
     EditText nameText, emailText, passwordText;
+    Button b_icon, b_promo, b_s1, b_s2, b_s3, b_apk;
     ViewFlipper viewFlipper;
     Toolbar toolbar;
 
@@ -129,6 +133,18 @@ public class SubmitActivity extends AppCompatActivity {
                             tv.setTextColor(Color.WHITE);
                             view.setBackgroundColor(Color.parseColor("#F44336"));
                             snack.show();
+                            valuesImages.clear();
+                            imageStrings.clear();
+                            File sd = Environment.getExternalStorageDirectory();
+                            File folder = new File(sd + "/Showcase");
+                            if (folder.isDirectory()) {
+                                File[] children = folder.listFiles();
+                                for (File child : children) {
+                                    child.delete();
+                                }
+
+                                folder.delete();
+                            }
                         }
                     } else {
                         Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
@@ -266,6 +282,7 @@ public class SubmitActivity extends AppCompatActivity {
 
     public void filePick(View view) {
         Intent i = new Intent(this, FilePickerActivity.class);
+        Intent ic = new Intent(this, Chooser.class);
         switch (view.getId()) {
             case R.id.icon:
                 startActivityForResult(i, 1);
@@ -286,46 +303,9 @@ public class SubmitActivity extends AppCompatActivity {
                 startActivityForResult(i, 6);
                 break;
             case R.id.apk:
-                startActivityForResult(i, 7);
+                startActivityForResult(ic, 7);
                 break;
         }
-    }
-
-    public boolean unzip(String mArchivePath, String mOutPutStream) {
-        InputStream inputstream;
-        ZipInputStream zipinputstream;
-        try {
-            String filename;
-            inputstream = new FileInputStream(mArchivePath);
-            zipinputstream = new ZipInputStream(new BufferedInputStream(inputstream));
-            ZipEntry mZipEntry;
-            byte[] buffer = new byte[1024];
-            int count;
-
-            while ((mZipEntry = zipinputstream.getNextEntry()) != null) {
-                filename = mZipEntry.getName();
-
-                if (mZipEntry.isDirectory()) {
-                    File fmd = new File(mOutPutStream + filename);
-                    fmd.mkdirs();
-                    continue;
-                }
-
-                FileOutputStream fileoutputstream = new FileOutputStream(mOutPutStream + filename);
-
-                while ((count = zipinputstream.read(buffer)) != -1) {
-                    fileoutputstream.write(buffer, 0, count);
-                }
-                fileoutputstream.close();
-                zipinputstream.closeEntry();
-            }
-            Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_LONG).show();
-            zipinputstream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
     }
 
     @Override
@@ -347,8 +327,71 @@ public class SubmitActivity extends AppCompatActivity {
                 imageStrings.add("screenshot_3");
             } else if (requestCode == 6) {
                 imageStrings.add("wallpaper");
-            } else if (requestCode == 7) {
-                unzip(path, "/sdcard/Showcase/");
+            }
+        } else if (requestCode == 7) {
+            try {
+                String pn = getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("pn", "null");
+                PackageManager pm = getPackageManager();
+                Resources resources = pm.getResourcesForApplication(pn);
+                b_icon = (Button) findViewById(R.id.icon);
+                b_promo = (Button) findViewById(R.id.promo);
+                b_s1 = (Button) findViewById(R.id.screenshot_1);
+                b_s2 = (Button) findViewById(R.id.screenshot_3);
+                b_s3 = (Button) findViewById(R.id.screenshot_2);
+                b_apk = (Button) findViewById(R.id.apk);
+                int[] images = {(resources.getIdentifier("icon", "drawable", pn)), (resources.getIdentifier("heroimage", "drawable", pn)), (resources.getIdentifier("screenshot1", "drawable", pn)), (resources.getIdentifier("screenshot2", "drawable", pn)), (resources.getIdentifier("screenshot3", "drawable", pn))};
+                for(int i=0; i < images.length; i++){
+                    Drawable d_image = resources.getDrawable(images[i], null);
+                    Bitmap b_image = ((BitmapDrawable) d_image).getBitmap();
+                    String name = "image_"+ String.valueOf(i)+".png" ;
+
+                    File sd = Environment.getExternalStorageDirectory();
+                    File folder = new File(sd + "/Showcase");
+                    folder.mkdir();
+
+                    File dest = new File(folder, name);
+                    String d_path = dest.getAbsolutePath();
+                    try {
+                        FileOutputStream out;
+                        out = new FileOutputStream(dest);
+                        b_image.compress(Bitmap.CompressFormat.PNG, 100, out);
+                        valuesImages.add(d_path);
+                        b_icon.setEnabled(false);
+                        b_promo.setEnabled(false);
+                        b_s1.setEnabled(false);
+                        b_s2.setEnabled(false);
+                        b_s3.setEnabled(false);
+                        b_apk.setEnabled(false);
+                        out.flush();
+                        out.close();
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+                imageStrings.add("icon");
+                imageStrings.add("promo");
+                imageStrings.add("screenshot_1");
+                imageStrings.add("screenshot_2");
+                imageStrings.add("screenshot_3");
+                ApplicationInfo applicationInfo = getApplicationContext().getPackageManager().getApplicationInfo(pn, PackageManager.GET_META_DATA);
+                Bundle bundle = applicationInfo.metaData;
+                String name = bundle.getString("Layers_Name");
+                String dev = bundle.getString("Layers_Developer");
+                String desc = bundle.getString("Layers_Description");
+                EditText e_name = (EditText)findViewById(R.id.title);
+                EditText e_dev = (EditText)findViewById(R.id.author);
+                EditText e_desc = (EditText)findViewById(R.id.description);
+                EditText e_pversion = (EditText)findViewById(R.id.plugin_version);
+                e_name.setText(name, TextView.BufferType.EDITABLE);
+                e_dev.setText(dev, TextView.BufferType.EDITABLE);
+                e_desc.setText(desc, TextView.BufferType.EDITABLE);
+                if (bundle.containsKey("Layers_PluginVersion")) {
+                    String pversion = bundle.getString("Layers_PluginVersion");
+                    e_pversion.setText(pversion, TextView.BufferType.EDITABLE);
+                }
+
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
             }
         }
     }
