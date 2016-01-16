@@ -127,11 +127,8 @@ This may cause blurry looking drawables or drawables which are not themed.</stri
     <string name="xhdpi">xhdpi</string>
     <string name="xxhdpi">xxhdpi</string>
     <string name="xxxhdpi">xxxhdpi</string>
-    <string name="doesitneedupdating">Does It Need Updating</string>
-    <string name="willyoubeupdating">Will You Be Updating</string>
     <string name="bootanimation">Boot Animation</string>
     <string name="font">Font</string>
-    <string name="iconpack">Icon Pack</string>
     <string name="apk">Extract Apk Content</string>
     <string name="send">Generate Json</string>
 

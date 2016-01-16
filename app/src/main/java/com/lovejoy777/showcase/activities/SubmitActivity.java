@@ -54,13 +54,12 @@ public class SubmitActivity extends AppCompatActivity {
     public final int[] CheckBox = {R.id.for_L, R.id.for_M, R.id.basic, R.id.basic_m,
             R.id.type2, R.id.type3, R.id.type3_m, R.id.touchwiz, R.id.lg, R.id.sense,
             R.id.xperia, R.id.zenui, R.id.hdpi, R.id.mdpi, R.id.xhdpi, R.id.xxhdpi, R.id.xxxhdpi, R.id.free,
-            R.id.donate, R.id.paid, R.id.needs_update, R.id.will_update, R.id.bootani, R.id.font, R.id.iconpack};
+            R.id.donate, R.id.paid, R.id.bootani, R.id.font};
 
     String[] strings = new String[]{"title", "description", "author", "link", "backup_link", "googleplus", "version", "donate_link",
             "donate_version", "plugin_version", "toolbar_background_color", "for_L", "for_M",
             "basic", "basic_m", "type2", "type3", "type3_m", "touchwiz", "lg", "sense", "xperia", "zenui",
-            "hdpi", "mdpi", "xhdpi", "xxhdpi", "xxxhdpi", "free", "donate", "paid", "needs_update", "will_update",
-            "bootani", "font", "iconpack"};
+            "hdpi", "mdpi", "xhdpi", "xxhdpi", "xxxhdpi", "free", "donate", "paid", "bootani", "font"};
     ArrayList<String> values = new ArrayList<String>(Arrays.asList(strings));
     ArrayList<String> values2 = new ArrayList<String>();
     ArrayList<String> valuesImages = new ArrayList<String>();

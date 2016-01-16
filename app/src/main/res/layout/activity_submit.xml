@@ -485,17 +485,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/paid" />
 
-                <CheckBox
-                    android:id="@+id/needs_update"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/doesitneedupdating" />
-
-                <CheckBox
-                    android:id="@+id/will_update"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/willyoubeupdating" />
 
                 <CheckBox
                     android:id="@+id/bootani"
@@ -508,12 +497,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/font" />
-
-                <CheckBox
-                    android:id="@+id/iconpack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/iconpack" />
 
                 <Button
                     android:id="@+id/generate"
