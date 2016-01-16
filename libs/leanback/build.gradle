@@ -23,12 +23,9 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-
-
-    compile 'com.nineoldandroids:library:2.4.0'
-
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:cardview-v7:23.0.1'
+    compile files('../nineoldandroids-2.4.0.jar')
 }
 
 
