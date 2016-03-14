@@ -26,8 +26,9 @@ public class UpgradeJson extends AsyncTask<Void, String, Void> {
     private Callback callback;
     private ProgressDialog progressShowcase;
     //private final String jsonData = "https://api.github.com/repos/BitSyko/layers_showcase_json/releases/latest";
-    private final String jsonFile = "http://showcaseapi.x10.mx/v1/layers";
-    private final String jsonVersion = "http://showcaseapi.x10.mx/v1/getversion";
+
+    private String jsonFile, jsonVersion, version;
+    private final String mysqlSwitch = "http://layersshowcase.x10.mx/app_switch.json";
 
 
     public UpgradeJson(Context context, boolean force, Callback callback) {
@@ -56,33 +57,63 @@ public class UpgradeJson extends AsyncTask<Void, String, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
+        String dlMysqlSwitch = downloadFile(mysqlSwitch);
 
-        String jsonInfo = downloadFile(jsonVersion);
         JsonNode actualObj;
 
-        if (jsonInfo == null) {
+        if (dlMysqlSwitch == null) {
             publishProgress("Download failed");
             return null;
         }
 
         try {
-            actualObj = new ObjectMapper().readTree(jsonInfo);
+            actualObj = new ObjectMapper().readTree(dlMysqlSwitch);
         } catch (IOException e) {
             e.printStackTrace();
             publishProgress("Download failed");
             return null;
         }
 
-        String version = actualObj.get("version_id").asText();
+        String mysqlSwitchValue = actualObj.get("mysql_switch").asText();
+
+        if(mysqlSwitchValue == "false"){
+            jsonVersion = "https://api.github.com/repos/BitSyko/layers_showcase_json/releases/latest";
+            String jsonInfo = downloadFile(jsonVersion);
+            if (jsonInfo == null) {
+                publishProgress("Download failed");
+                return null;
+            }
+            try {
+                actualObj = new ObjectMapper().readTree(jsonInfo);
+            } catch (IOException e) {
+                e.printStackTrace();
+                publishProgress("Download failed");
+                return null;
+            }
+            version = actualObj.get("tag_name").asText();
+            jsonFile = "https://github.com/BitSyko/layers_showcase_json/releases/download/" + version + "/showcase.json";
+        }else if (mysqlSwitchValue == "true"){
+            jsonFile = "http://layersshowcase.x10.mx/v1/layers";
+            jsonVersion = "http://layersshowcase.x10.mx/v1/getversion";
+            String jsonInfo = downloadFile(jsonVersion);
+            if (jsonInfo == null) {
+                publishProgress("Download failed");
+                return null;
+            }
+            try {
+                actualObj = new ObjectMapper().readTree(jsonInfo);
+            } catch (IOException e) {
+                e.printStackTrace();
+                publishProgress("Download failed");
+                return null;
+            }
+            version = actualObj.get("version_id").asText();
+        }
 
         //Compare version with one in preferences
         if (!force && context.getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("version_id", "0").equals(version)) {
             return null;
         }
-
-
-        //String layersJsonUrl = "https://github.com/BitSyko/layers_showcase_json/releases/download/" + tag + "/showcase.json";
-
 
         String layersJson = downloadFile(jsonFile);
 
