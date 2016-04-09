@@ -101,7 +101,7 @@ public class SubmitActivity extends AppCompatActivity {
         prgDialog.show();
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("Authorization", getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("apiKey", "null"));
-        client.post(getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("apiURL", "http://showcaseapi.x10.mx/v1/register"), params, new AsyncHttpResponseHandler() {
+        client.post(getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("apiURL", "http://layersshowcase.x10.mx/v1/register"), params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 prgDialog.hide();
@@ -115,7 +115,7 @@ public class SubmitActivity extends AppCompatActivity {
                             viewFlipper.setOutAnimation(SubmitActivity.this, R.anim.anni2);
                             viewFlipper.showNext();
                             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("view", "2").apply();
-                            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/login").apply();
+                            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://layersshowcase.x10.mx/v1/login").apply();
                         } else if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("2")) {
                             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiKey", obj.getString("apiKey")).apply();
                             toolbar.setTitle(R.string.Submit);
@@ -123,7 +123,7 @@ public class SubmitActivity extends AppCompatActivity {
                             viewFlipper.setOutAnimation(SubmitActivity.this, R.anim.anni2);
                             viewFlipper.showNext();
                             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("view", "3").apply();
-                            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/layers").apply();
+                            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://layersshowcase.x10.mx/v1/layers").apply();
                         } else if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("3")) {
                             View coordinatorLayoutView = findViewById(R.id.snackbar);
                             Snackbar snack = Snackbar.make(coordinatorLayoutView, R.string.SucessfullySubmited, Snackbar.LENGTH_LONG);
@@ -263,7 +263,7 @@ public class SubmitActivity extends AppCompatActivity {
         viewFlipper.showNext();
         if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("1")) {
             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("view", "2").apply();
-            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/login").apply();
+            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://layersshowcase.x10.mx/v1/login").apply();
             toolbar.setTitle(R.string.Login);
         }
     }
@@ -274,7 +274,7 @@ public class SubmitActivity extends AppCompatActivity {
         viewFlipper.showPrevious();
         if (getSharedPreferences("myPrefs", Context.MODE_PRIVATE).getString("view", "1").equals("2")) {
             getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("view", "1").apply();
-            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://showcaseapi.x10.mx/v1/register").apply();
+            getSharedPreferences("myPrefs", Context.MODE_PRIVATE).edit().putString("apiURL", "http://layersshowcase.x10.mx/v1/register").apply();
             toolbar.setTitle(R.string.Register);
         }
     }
